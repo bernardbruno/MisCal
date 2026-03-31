@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import ProgressHeader from './components/ProgressHeader'
 import Meal from './components/Meal'
-import AgregarMeal from './components/agregarMeal';
+import AgregarMeal from './components/AgregarMeal';
 
 const FOOD_DATABASE = [
-  { id: 1, nombre: 'Pechuga de Pollo (100g)', kcal: 165, prot: 31, carb: 0, fat: 3.6 },
-  { id: 2, nombre: 'Arroz Integral (100g)', kcal: 111, prot: 2.6, carb: 23, fat: 0.9 },
-  { id: 3, nombre: 'Huevo (unidad)', kcal: 70, prot: 6, carb: 0.5, fat: 5 },
-  { id: 4, nombre: 'Palta (media)', kcal: 160, prot: 2, carb: 8.5, fat: 14.7 },
+  { id: 1, nombre: 'Pechuga de Pollo (100g)', kcal: 165, prot: 31, carb: 0, fat: 3.6, unidad: 'gr' },
+  { id: 2, nombre: 'Arroz Integral (100g)', kcal: 111, prot: 2.6, carb: 23, fat: 0.9, unidad: 'gr' },
+  { id: 3, nombre: 'Huevo', kcal: 70, prot: 6, carb: 0.5, fat: 5, unidad: 'unidad' },
+  { id: 4, nombre: 'Palta ', kcal: 160, prot: 2, carb: 8.5, fat: 14.7, unidad: 'unidad' },
 ];
 
 function App() {
@@ -28,11 +28,15 @@ function App() {
   };
 
   const totals = dailyLogs.reduce((acc, curr) => ({
-    kcal: acc.kcal + curr.kcal,
-    prot: acc.prot + curr.prot,
-    carb: acc.carb + curr.carb,
-    fat: acc.fat + curr.fat,
+    kcal: Math.round(acc.kcal + curr.kcal),
+    prot: Number((acc.prot + curr.prot).toFixed(1)),
+    carb: Number((acc.carb + curr.carb).toFixed(1)),
+    fat: Number((acc.fat + curr.fat).toFixed(1)),
   }), { kcal: 0, prot: 0, carb: 0, fat: 0 });
+
+  const deleteEntry = (logId: number) => {
+  setDailyLogs(dailyLogs.filter(entry => entry.logId !== logId));
+  };
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 p-4 md:p-8 font-sans">
@@ -52,6 +56,7 @@ function App() {
             title={meal}
             items={dailyLogs.filter(item => item.meal === meal)}
             onAddClick={() => openModal(meal)}
+            onDelete={deleteEntry}
           />
         ))}
 
