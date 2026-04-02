@@ -22,9 +22,9 @@ function App() {
   };
 
   const handleAddFood = (food: any) => {
-    const newEntry = { ...food, logId: Date.now(), meal: activeMeal };
-    setDailyLogs([...dailyLogs, newEntry]);
-    setIsModalOpen(false); 
+    const newEntry = { ...food, logId: food.logId || Date.now() + Math.random(), meal: activeMeal };
+    setDailyLogs(prev => [...prev, newEntry]);
+    setIsModalOpen(false);
   };
 
   const totals = dailyLogs.reduce((acc, curr) => ({
